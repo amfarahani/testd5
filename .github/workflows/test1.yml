@@ -42,7 +42,7 @@ jobs:
       # Step 4: Run the Flask application
       # This executes app.py on the GitHub Actions runner
       # NOTE: This runs temporarily and stops when the job finishes
-      - name: Run app
+      - name: Run ML tests
         run: |
-          python app.py
+          pytest -q
 
