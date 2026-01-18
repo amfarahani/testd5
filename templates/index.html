@@ -1,18 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Iris</title>
+  <meta charset="UTF-8">
+  <title>Iris Predictor</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      padding: 40px;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: #ffffff;
+      padding: 25px 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .form-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .form-row label {
+      width: 130px;
+      font-weight: bold;
+    }
+
+    .form-row input {
+      flex: 1;
+      padding: 6px 8px;
+      font-size: 14px;
+    }
+btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .prediction {
+      margin-top: 25px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #2e7d32;   /* green */
+    }
+  </style>
+  <script>
+    function clearPrediction() {
+      document.getElementById("prediction").innerText = "";
+    }
+  </script>
 </head>
 <body>
-    <form action="{{ url_for('predict')}}" method="POST">
-        Sepal_Length:  <input type="number" name="sepal_length"><br>
-        Sepal_Width:   <input type="number" name="sepal_width"><br>
-        Petal_Length:  <input type="number" name="petal_length"><br>
-        Petal_Width:   <input type="number" name="petal_width"><br>
-      
-        <input type=submit    value=Submit>
-   </form>
-    My prediction: {{ predict }} 
+
+<div class="container">
+  <h2>Iris Prediction</h2>
+
+  <form action="{{ url_for('predict') }}" method="POST">
+
+    <div class="form-row">
+      <label>Sepal Length</label>
+      <input type="number" step="any" name="sepal_length"
+             value="{{ values.get('sepal_length', '') }}"
+             oninput="clearPrediction()" required>
+    </div>
+
+    <div class="form-row">
+      <label>Sepal Width</label>
+      <input type="number" step="any" name="sepal_width"
+             value="{{ values.get('sepal_width', '') }}"
+             oninput="clearPrediction()" required>
+    </div>
+
+    <div class="form-row">
+      <label>Petal Length</label>
+      <input type="number" step="any" name="petal_length"
+             value="{{ values.get('petal_length', '') }}"
+             oninput="clearPrediction()" required>
+    </div>
+
+    <div class="form-row">
+      <label>Petal Width</label>
+      <input type="number" step="any" name="petal_width"
+             value="{{ values.get('petal_width', '') }}"
+             oninput="clearPrediction()" required>
+    </div>
+
+    <button class="btn" type="submit">Predict</button>
+  </form>
+
+  <div id="prediction" class="prediction">
+    {% if predict %}
+      Prediction: {{ predict }}
+    {% endif %}
+  </div>
+</div>
+
 </body>
 </html>
+
+
 

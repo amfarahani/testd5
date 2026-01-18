@@ -1,0 +1,48 @@
+# Name of the workflow
+# This is what you see in the GitHub Actions tab
+name: Deploy on laptop
+
+# When should this workflow run?
+# 'push' means it runs every time code is pushed to the repository
+on:
+  push:
+
+# A workflow is made up of one or more jobs
+jobs:
+
+  # Job name (can be any name)
+  build:
+
+    # The type of machine that will run this job
+    # GitHub provides a temporary Ubuntu Linux machine
+    runs-on: ubuntu-latest
+
+    # A job consists of multiple steps
+    steps
+
+      # Step 1: Download (clone) the repository code
+      # Without this step, the runner would not have your files
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Install Python on the runner
+      # This sets up a Python environment for the workflow
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+
+      # Step 3: Install project dependencies
+      # pip is upgraded first, then packages from requirements.txt are installed
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Step 4: Run the Flask application
+      # This executes app.py on the GitHub Actions runner
+      # NOTE: This runs temporarily and stops when the job finishes
+      - name: Run app
+        run: |
+          python app.py
+

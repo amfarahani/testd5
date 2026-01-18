@@ -1,29 +1,53 @@
 from flask import Flask, render_template, request
 import numpy as np
 import pickle
-import joblib
+import os
+
 app = Flask(__name__)
-filename = 'file_iris1.pkl'
-#model = pickle.load(open(filename, 'rb'))
-model = joblib.load(filename)
-#model = joblib.load(filename)
 
-@app.route('/')
-def index(): 
-    return render_template('index.html')
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "file_iris1.pkl")
+with open(MODEL_PATH, "rb") as f:
+    model = pickle.load(f)
 
-@app.route('/predict', methods=['POST'])
+@app.route("/")
+def index():
+    return render_template(
+        "index.html",
+        predict="",
+        values={}
+    )
+
+@app.route("/predict", methods=["POST"])
 def predict():
-    Sepal_Length = request.form['sepal_length']
-    Sepal_Width = request.form['sepal_width']
-    Petal_Length = request.form['petal_length']
-    Petal_Width = request.form['petal_width']
-      
-    pred = model.predict(np.array([[Sepal_Length, Sepal_Width, Petal_Length, Petal_Width ]]))
-    print(pred)
-    return render_template('index.html', predict=str(pred))
+    try:
+        values = {
+            "sepal_length": request.form.get("sepal_length", ""),
+            "sepal_width": request.form.get("sepal_width", ""),
+            "petal_length": request.form.get("petal_length", ""),
+            "petal_width": request.form.get("petal_width", "")
+        }
 
+        X = np.array([[float(values["sepal_length"]),
+                       float(values["sepal_width"]),
+                       float(values["petal_length"]),
+                       float(values["petal_width"])]], dtype=float)
 
-if __name__ == '__main__':
+        pred = model.predict(X)[0]
+
+        return render_template(
+            "index.html",
+            predict=str(pred),
+            values=values
+        )
+
+    except Exception:
+        return render_template(
+            "index.html",
+            predict="",
+            values={}
+        )
+
+if __name__ == "__main__":
     app.run(debug=True)
+
 
