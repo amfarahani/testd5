@@ -42,6 +42,7 @@ jobs:
 
       # Step 4: Run unit tests (pytest)
       # This verifies the Flask app and ML model without starting the server
+      # The PYTHONPATH helps pytest find app.py 
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=${{ github.workspace }}" >> $GITHUB_ENV
       - name: Run tests
