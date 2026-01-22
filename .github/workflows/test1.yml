@@ -11,15 +11,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: List repo files (debug)
-        run: |
-          pwd
-          ls -la
-          find . -maxdepth 2 -type f -name "Dockerfile" -print
-
-      - name: Docker build (debug)
-        run: docker build -t irisdocker-test .
-
       - name: Build, Push and Release a Docker container to Heroku
         uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
