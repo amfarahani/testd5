@@ -21,7 +21,7 @@ jobs:
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}          
           heroku_app_name: "irisdocker"       
-          heroku_email: "afarahan@nu.edu"
+          email: "afarahan@nu.edu"
 
           # (Optional, default: "./")
           # Dockerfile directory.
