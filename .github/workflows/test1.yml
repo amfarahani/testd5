@@ -1,8 +1,6 @@
-OB# Name of the workflow
+# Name of the workflow
 # This is what you see in the GitHub Actions tab
 name: Deploy image container to Heroku
-# Your workflow name.
-name: Deploy to heroku.
 
 # Run workflow on every push to main branch.
 on:
