@@ -5,7 +5,7 @@ name: Deploy image container to Heroku
 # Run workflow on every push to main branch.
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 # Your workflows jobs.
 jobs:
