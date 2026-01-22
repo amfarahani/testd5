@@ -25,12 +25,11 @@ jobs:
           heroku --version
 
       - name: Build, Push and Release a Docker container to Heroku
-        uses: gonuit/heroku-docker-deploy@v1.3.3
+        uses: johnnybenson/heroku-docker-deploy@v1.5.1
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: "irisdocker"
           email: "afarahan@nu.edu"
-          dockerfile_directory: ./
           process_type: web
     
 
