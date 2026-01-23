@@ -1,36 +1,53 @@
-name: Deploy image container to Heroku
+name: Deploy to Heroku (Container)
 
 on:
   push:
-    branches: [master]
+    branches: ["master"]
+  workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: List repo files (debug)
-        run: |
-          pwd
-          ls -la
-          find . -maxdepth 2 -type f -name "Dockerfile" -print
-
-      - name: Docker build (debug)
-        run: docker build -t irisdocker-test .
 
       - name: Install Heroku CLI
-        run: |
-          curl https://cli-assets.heroku.com/install.sh | sh
-          heroku --version
-
-      - name: Build, Push and Release a Docker container to Heroku
-        uses: johnnybenson/heroku-docker-deploy@v1.5.1
+        uses: ynab/heroku-cli-action@v1
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_app_name: "irisdocker"
-          email: "afarahan@nu.edu"
-          process_type: web
+          # If you prefer, you can omit this and just rely on HEROKU_API_KEY env below.
+          api_key: ${{ secrets.HEROKU_API_KEY }}
+
+      - name: Install container registry plugin (safe if already installed)
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku plugins:install @heroku-cli/plugin-container-registry || true
+
+      - name: Log in to Heroku Container Registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku container:login
+
+      - name: Build Docker image
+        run: |
+          docker build -t web .
+
+      - name: Tag for Heroku registry
+        run: |
+          docker tag web registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+
+      - name: Push to Heroku registry
+        run: |
+          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+
+      - name: Release on Heroku
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
     
 
 
