@@ -19,6 +19,12 @@ jobs:
           # If you prefer, you can omit this and just rely on HEROKU_API_KEY env below.
           api_key: ${{ secrets.HEROKU_API_KEY }}
 
+      - name: Ensure container stack
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: |
+          heroku stack:set container -a ${{ secrets.HEROKU_APP_NAME }} || true
+
       - name: Install container registry plugin (safe if already installed)
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
